@@ -73,16 +73,34 @@ public class TicTacToe {
         return new int[]{row, col};
     }
 
+    // UC5: Validate move — row/col must be 0-2 and cell must be empty
+    static boolean isValidMove(int row, int col) {
+        return row >= 0 && row <= 2
+                && col >= 0 && col <= 2
+                && board[row][col] == '-';
+    }
+
+    // UC6: Place a symbol on the board at the given row and column
+    static void placeMove(int row, int col, char symbol) {
+        board[row][col] = symbol;
+        System.out.println("Placed '" + symbol + "' at row=" + row + ", col=" + col);
+    }
+
     public static void main(String[] args) {
         System.out.println("=== Tic-Tac-Toe ===");
         initBoard();
         printBoard();
         toss();
-        System.out.println("Player: " + playerSymbol + " | Computer: " + computerSymbol);
 
-        int slot  = getUserSlot();
-        int[] idx = slotToIndex(slot);
-        System.out.println("Slot " + slot + " → row=" + idx[0] + ", col=" + idx[1]);
+        // Demo: player picks a slot, validate, then place
+        int slot  = getUserSlot();        // UC3
+        int[] idx = slotToIndex(slot);    // UC4
+        if (isValidMove(idx[0], idx[1])) // UC5
+            placeMove(idx[0], idx[1], playerSymbol); // UC6
+        else
+            System.out.println("Invalid move.");
+
+        printBoard();
         scanner.close();
     }
 }
