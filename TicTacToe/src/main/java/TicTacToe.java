@@ -1,5 +1,5 @@
 import java.util.Scanner;
-class  TicTackToe {
+class  TicTacToe {
     static char[][] board = new char[3][3];
     static boolean isHumanTurn;
     static char humanSymbol;
