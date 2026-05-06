@@ -95,34 +95,30 @@ public class TicTacToe {
         System.out.println("Computer placed '" + computerSymbol + "'");
     }
 
-    // UC8 helper: check if board is full (draw condition)
-    static boolean isBoardFull() {
-        for (int r = 0; r < 3; r++)
-            for (int c = 0; c < 3; c++)
-                if (board[r][c] == '-') return false;
-        return true;
-    }
-
     // UC9: Check winning condition — rows, columns, and both diagonals
     static boolean checkWin(char symbol) {
-        // Check all 3 rows
         for (int r = 0; r < 3; r++)
             if (board[r][0] == symbol && board[r][1] == symbol && board[r][2] == symbol)
                 return true;
-        // Check all 3 columns
         for (int c = 0; c < 3; c++)
             if (board[0][c] == symbol && board[1][c] == symbol && board[2][c] == symbol)
                 return true;
-        // Check main diagonal (top-left to bottom-right)
-        if (board[0][0] == symbol && board[1][1] == symbol && board[2][2] == symbol)
-            return true;
-        // Check anti-diagonal (top-right to bottom-left)
-        if (board[0][2] == symbol && board[1][1] == symbol && board[2][0] == symbol)
-            return true;
+        if (board[0][0] == symbol && board[1][1] == symbol && board[2][2] == symbol) return true;
+        if (board[0][2] == symbol && board[1][1] == symbol && board[2][0] == symbol) return true;
         return false;
     }
 
-    // UC8: Continuous turn-based game loop — runs until win or draw
+    // UC10: Detect draw — count empty cells using loop traversal and boolean flag
+    static boolean isDraw() {
+        int emptyCells = 0;                          // counting logic
+        for (int r = 0; r < 3; r++)                  // loop traversal
+            for (int c = 0; c < 3; c++)
+                if (board[r][c] == '-') emptyCells++;
+        boolean noMovesLeft = (emptyCells == 0);     // boolean flag
+        return noMovesLeft && !checkWin(playerSymbol) && !checkWin(computerSymbol);
+    }
+
+    // UC8: Continuous turn-based game loop
     static void playGame() {
         while (true) {
             printBoard();
@@ -138,21 +134,21 @@ public class TicTacToe {
                 } while (!isValidMove(idx[0], idx[1]));
                 placeMove(idx[0], idx[1], playerSymbol);
 
-                if (checkWin(playerSymbol)) {          // UC9
+                if (checkWin(playerSymbol)) {
                     printBoard();
                     System.out.println("You win!");
                     break;
                 }
             } else {
                 computerMove();
-                if (checkWin(computerSymbol)) {        // UC9
+                if (checkWin(computerSymbol)) {
                     printBoard();
                     System.out.println("Computer wins!");
                     break;
                 }
             }
 
-            if (isBoardFull()) {
+            if (isDraw()) {                          // UC10
                 printBoard();
                 System.out.println("It's a draw!");
                 break;
